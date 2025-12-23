@@ -60,6 +60,8 @@ int main(int argc, char *argv[]) {
 			WriteStringToFile(out, GetMaterialFilename(scene->mMaterials[mesh->mMaterialIndex]).c_str());
 			out.write((char*)&mesh->mNumVertices, sizeof(mesh->mNumVertices));
 			out.write((char*)&mesh->mNumFaces, sizeof(mesh->mNumFaces));
+			out.write((char*)&mesh->mAABB.mMin, sizeof(mesh->mAABB.mMin));
+			out.write((char*)&mesh->mAABB.mMax, sizeof(mesh->mAABB.mMax));
 			for (int j = 0; j < mesh->mNumVertices; j++) {
 				auto v = mesh->mVertices[j];
 				out.write((char*)&v.x, sizeof(v.x));
