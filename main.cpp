@@ -57,28 +57,59 @@ int main(int argc, char *argv[]) {
 
 		for (int i = 0; i < scene->mNumMeshes; i++) {
 			auto mesh = scene->mMeshes[i];
-			WriteStringToFile(out, GetMaterialFilename(scene->mMaterials[mesh->mMaterialIndex]).c_str());
+			auto material = GetMaterialFilename(scene->mMaterials[mesh->mMaterialIndex]);
+			WriteStringToFile(out, material.c_str());
+			std::cout << std::format("\nProcessing mesh {} with material {}", i, material);
 			out.write((char*)&mesh->mNumVertices, sizeof(mesh->mNumVertices));
 			out.write((char*)&mesh->mNumFaces, sizeof(mesh->mNumFaces));
 			out.write((char*)&mesh->mAABB.mMin, sizeof(mesh->mAABB.mMin));
 			out.write((char*)&mesh->mAABB.mMax, sizeof(mesh->mAABB.mMax));
+
+			if (!mesh->mNormals) {
+				std::cout << "\nWARNING: Mesh has no normals!";
+			}
+
 			for (int j = 0; j < mesh->mNumVertices; j++) {
 				auto v = mesh->mVertices[j];
 				out.write((char*)&v.x, sizeof(v.x));
 				out.write((char*)&v.y, sizeof(v.y));
 				out.write((char*)&v.z, sizeof(v.z));
-				v = mesh->mNormals[j];
-				out.write((char*)&v.x, sizeof(v.x));
-				out.write((char*)&v.y, sizeof(v.y));
-				out.write((char*)&v.z, sizeof(v.z));
-				v = mesh->mTangents[j];
-				out.write((char*)&v.x, sizeof(v.x));
-				out.write((char*)&v.y, sizeof(v.y));
-				out.write((char*)&v.z, sizeof(v.z));
-				v = mesh->mBitangents[j];
-				out.write((char*)&v.x, sizeof(v.x));
-				out.write((char*)&v.y, sizeof(v.y));
-				out.write((char*)&v.z, sizeof(v.z));
+				if (mesh->mNormals) {
+					v = mesh->mNormals[j];
+					out.write((char*)&v.x, sizeof(v.x));
+					out.write((char*)&v.y, sizeof(v.y));
+					out.write((char*)&v.z, sizeof(v.z));
+				}
+				else {
+					float f = 0;
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+				}
+				if (mesh->mTangents) {
+					v = mesh->mTangents[j];
+					out.write((char*)&v.x, sizeof(v.x));
+					out.write((char*)&v.y, sizeof(v.y));
+					out.write((char*)&v.z, sizeof(v.z));
+				}
+				else {
+					float f = 0;
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+				}
+				if (mesh->mBitangents) {
+					v = mesh->mBitangents[j];
+					out.write((char*)&v.x, sizeof(v.x));
+					out.write((char*)&v.y, sizeof(v.y));
+					out.write((char*)&v.z, sizeof(v.z));
+				}
+				else {
+					float f = 0;
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+					out.write((char*)&f, sizeof(f));
+				}
 				if (mesh->mTextureCoords[0]) {
 					v = mesh->mTextureCoords[0][j];
 
