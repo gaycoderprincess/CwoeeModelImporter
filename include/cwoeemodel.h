@@ -12,7 +12,7 @@ public:
 	NyaVec3* aUVs1;
 	NyaVec3* aUVs2;
 	NyaDrawing::CNyaRGBA32* aColors;
-	int* aIndices;
+	uint32_t* aIndices;
 
 	void Destroy() {
 		delete[] aVertices;
@@ -52,7 +52,7 @@ std::vector<CwoeeModelMesh> ReadCwoeeModel(std::filesystem::path path) {
 		mesh.aUVs1 = new NyaVec3[mesh.nNumVertices];
 		mesh.aUVs2 = new NyaVec3[mesh.nNumVertices];
 		mesh.aColors = new NyaDrawing::CNyaRGBA32[mesh.nNumVertices];
-		mesh.aIndices = new int[mesh.nNumFaces*3];
+		mesh.aIndices = new uint32_t[mesh.nNumFaces*3];
 		for (int j = 0; j < mesh.nNumVertices; j++) {
 			in.read((char*)&mesh.aVertices[j], sizeof(mesh.aVertices[j]));
 			in.read((char*)&mesh.aNormals[j], sizeof(mesh.aNormals[j]));
